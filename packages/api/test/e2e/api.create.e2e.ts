@@ -12,15 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {Api} from '../../src/Api';
-import staticMetadata from '../../src/staticMetadata';
-import initApiPromise from '../../../../jest/initApiPromise';
+import {Metadata, u32, UInt} from '@polkadot/types';
+import {SignedBlock} from "@polkadot/types/interfaces/runtime";
+import Extrinsic from "@polkadot/types/primitive/Extrinsic/Extrinsic";
+import {filter, switchMap} from 'rxjs/operators';
 import config from '../../../../config';
-import { Metadata } from '@polkadot/types';
+
+import {Api} from '../../src/Api';
+import {ApiRx} from '../../src/ApiRx';
+import staticMetadata from '../../src/staticMetadata';
 
 describe('e2e api create', () => {
   let api;
   let incorrectApi;
+
+  async function connectOnFinality(at?: number) {
+    const onfinality_node = 'wss://node-6691907305808760832.jm.onfinality.io/ws?apikey=5907c66b-320e-4d9c-86b3-207a63c94ad6';
+    const numOfBlockToGoBackForMetadata = 0;
+    let api = await ApiRx.create({provider: onfinality_node}).toPromise();
+
+    const genesisHash = api.genesisHash.toString();
+
+    const latestRuntimeVersion = await api.rpc.state.getRuntimeVersion().toPromise();
+    const latestSpecVersion = latestRuntimeVersion.specVersion.toString();
+
+    const blockHash = await api.rpc.chain.getBlockHash(at).toPromise();
+    let blockHashForMetadata = at ? await api.rpc.chain.getBlockHash(at - numOfBlockToGoBackForMetadata).toPromise() : blockHash;
+    const metadata = await api.rpc.state.getMetadata(blockHashForMetadata).toPromise();
+
+    api = await ApiRx.create({provider: onfinality_node, metadata: {
+        [`${genesisHash}-${latestSpecVersion}`]: metadata.toHex(),
+      }}).toPromise();
+
+    return {api, blockHash};
+  }
 
   it('For Azalea chain - checking if static metadata is same as latest', async () => {
     const provider = 'wss://cennznet.unfrastructure.io/public/ws'; // Use Azalea
@@ -37,7 +62,8 @@ describe('e2e api create', () => {
         incorrectApi.disconnect();
       }
       incorrectApi = null;
-    } catch (e) {}
+    } catch (e) {
+    }
   });
 
   it('should create an Api instance with the timeout option', async () => {
@@ -47,6 +73,55 @@ describe('e2e api create', () => {
     const hash = await api.rpc.chain.getBlockHash();
 
     expect(hash).toBeDefined();
+  });
+
+  it('Direct query of payment info at block 705492', async () => {
+    const provider = 'wss://node-6691907305808760832.jm.onfinality.io/ws?apikey=5907c66b-320e-4d9c-86b3-207a63c94ad6';
+    api = await Api.create({provider});
+    const paymentInfo = await api.rpc.payment.queryInfo(
+      '0x290284f4d373896af0d70b40c8b80af075f2761043c1a63798a2c5cb95d68f1d66bd2f01e8d97cd7726c3652fdee30e7dd3719022859384228cb2528e9c0ee9513013c06ce5af9e6b664da12ae945c63268b31b98a3b1e92e95fe0c55b674bdcac45d0880035010c00001c00803236a71a2293fcf72370c528a20919c77fb0581555d467a7154f0ca94b1e2e',
+      '0xeb5f443cfcdb4aacb7aec8ebdbed458eb447ec271da3459f98501f9f3adbe33f');
+    expect(paymentInfo).toEqual({"weight": 0, "class": "operational", "partialFee": 1000000000000});
+  });
+
+  it('Payment info at block 705492', async () => {
+    let {api, blockHash} = await connectOnFinality(705492);
+
+    const paymentInfo = await api.rpc.chain.getBlock(blockHash).pipe(
+      switchMap((b) => (b as SignedBlock).block.extrinsics),
+      filter((e) => (e as Extrinsic).isSigned),
+      switchMap((e) => {
+          const extrinsic = (e as Extrinsic).toHex();
+          return api.rpc.payment.queryInfo(extrinsic, blockHash);
+        }
+      )).toPromise();
+
+    expect(paymentInfo.toJSON()).toEqual({"weight": 0, "class": "Operational", "partialFee": 1000000000000});
+  });
+
+  it('Events at block 703071', async () => {
+    let {api, blockHash} = await connectOnFinality(703071);
+    const events = await api.query.system.events.at(blockHash).toPromise();
+    expect(events.toJSON()).toEqual([{
+      "phase": {"ApplyExtrinsic": 0},
+      "event": {"index": "0x0000", "data": [{"weight": 10000, "class": "Operational", "paysFee": true}]},
+      "topics": []
+    }, {
+      "phase": {"ApplyExtrinsic": 1},
+      "event": {"index": "0x0000", "data": [{"weight": 10000, "class": "Normal", "paysFee": true}]},
+      "topics": []
+    }, {
+      "phase": {"ApplyExtrinsic": 2},
+      "event": {
+        "index": "0x0303",
+        "data": [2, "5HbiMZ7PhU4oz6yQ6GhDZkRus1GjcsmA7fXEFaVDmHy6Rp5j", "0x4b3b4ca85a86c47a098a224000000000"]
+      },
+      "topics": []
+    }, {
+      "phase": {"ApplyExtrinsic": 2},
+      "event": {"index": "0x0000", "data": [{"weight": 10000, "class": "Normal", "paysFee": true}]},
+      "topics": []
+    }]);
   });
 
   it('should get rejected if the connection fails', async () => {
