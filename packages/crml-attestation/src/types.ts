@@ -12,70 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { AttestationValue } from '@cennznet/types';
-import { Observable } from 'rxjs';
-
-export type Claim = { holder: string; issuer: string; topic: string; value: AttestationValue };
+import { AttestationValue, Struct } from '@cennznet/types';
 
 /**
- * @deprecated
+ * A cryptographic claim about a holder address made by another issuing address.
+ * The claim is made on a certain `topic` with some `value`
+ * An alias for `AttestationValue`
  */
-export type Claims = { [topic: string]: { [issuers: string]: AttestationValue } };
-/**
- * @deprecated
- */
-export type ClaimsAsHex = { [topic: string]: { [issuers: string]: string } };
-/**
- * @deprecated
- */
-export type ClaimsAsU8a = { [topic: string]: { [issuers: string]: Uint8Array } };
-/**
- * @deprecated
- */
-export type ClaimsAsHexFunc = () => ClaimsAsHex;
-/**
- * @deprecated
- */
-export type ClaimsAsU8aFunc = () => ClaimsAsU8a;
-
-/**
- * @deprecated
- */
-export type ClaimsObject = {
-  claims: Claims;
-  claimsAsHex: ClaimsAsHexFunc;
-  claimsAsU8a: ClaimsAsU8aFunc;
-};
-
-export interface QueryableGetClaim {
-  (holder: string, issuer: string, topic: string): Promise<AttestationValue>;
-  (holder: string, issuer: string, topic: string, callbackFn: any): Promise<() => any>;
-}
-
-export interface QueryableGetClaimList {
-  (holder: string, issuers: Array<string>, topic: Array<string>): Promise<Claim[]>;
-  (holder: string, issuers: Array<string>, topic: Array<string>, callbackFn: any): Promise<() => void>;
-}
-
-/**
- * @deprecated
- */
-export interface QueryableGetClaims {
-  (holder: string, issuers: Array<string>, topic: Array<string>): Promise<ClaimsObject>;
-  (holder: string, issuers: Array<string>, topic: Array<string>, callbackFn: any): Promise<() => void>;
-}
-
-export interface QueryableGetClaimRx {
-  (holder: string, issuer: string, topic: string): Observable<AttestationValue>;
-}
-
-export interface QueryableGetClaimListRx {
-  (holder: string, issuers: Array<string>, topic: Array<string>): Observable<Claim[]>;
-}
-
-/**
- * @deprecated
- */
-export interface QueryableGetClaimsRx {
-  (holder: string, issuers: Array<string>, topic: Array<string>): Observable<ClaimsObject>;
+export interface Claim extends Struct {
+  holder: string;
+  issuer: string;
+  topic: string;
+  value: AttestationValue;
 }

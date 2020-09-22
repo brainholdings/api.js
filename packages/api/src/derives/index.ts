@@ -15,7 +15,6 @@
 import { ApiTypes } from '@cennznet/api/types';
 import * as attestation from '@cennznet/crml-attestation/derives';
 import * as cennzxSpot from '@cennznet/crml-cennzx-spot/derives';
-import * as genericAsset from '@cennznet/crml-generic-asset/derives';
 import { AnyFunction } from '@cennznet/types/types';
 import { ApiInterfaceRx, MethodResult } from '@polkadot/api/types';
 import { Observable } from 'rxjs';
@@ -25,7 +24,7 @@ import * as staking from './staking';
 
 export type DeriveFunc = (api: ApiInterfaceRx) => (...args: any[]) => Observable<any>;
 
-export const derive = { attestation, cennzxSpot, fees, staking, session, genericAsset };
+export const derive = { attestation, cennzxSpot, fees, staking, session };
 
 export type DecoratedCennznetDerive<
   ApiType extends ApiTypes,

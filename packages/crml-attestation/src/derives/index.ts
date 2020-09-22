@@ -14,4 +14,3 @@
 
 export { getClaim } from './getClaim';
 export { getClaims } from './getClaims';
-export { claims } from './claims';
