@@ -8,7 +8,7 @@ module.exports = {
     '^.+\\.(js|jsx)$': 'babel-jest',
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
-  testMatch: ['<rootDir>/packages/api/**/?(*.)+(e2e).[jt]s?(x)'],
+  testMatch: ['<rootDir>/packages/[api|crml-attestation]/**/?(*.)+(e2e).[jt]s?(x)'],
   testEnvironment: '<rootDir>/jest/env.js',
   moduleNameMapper: {
     '@cennznet/api(.*)$': '<rootDir>/packages/api/src/$1',
