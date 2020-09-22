@@ -79,8 +79,8 @@ describe('AttestationRx APIs', () => {
   describe('Get Claim', () => {
     it('should get a claim with a specific issuer and holder', done => {
       api.derive.attestation.getClaim(holder.address, issuer.address, topic).subscribe(claim => {
-        expect(claim.toHex()).toBe(attestationValue.toHex());
-        expect(claim.toU8a()).toEqual(attestationValue.toU8a());
+        expect(claim.value.toHex()).toBe(attestationValue.toHex());
+        expect(claim.value.toU8a()).toEqual(attestationValue.toU8a());
 
         done();
       });

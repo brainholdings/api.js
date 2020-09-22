@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { AttestationValue, Struct } from '@cennznet/types';
+import { AttestationValue } from '@cennznet/types';
 
 /**
  * A cryptographic claim about a holder address made by another issuing address.
  * The claim is made on a certain `topic` with some `value`
  * An alias for `AttestationValue`
  */
-export interface Claim extends Struct {
+export type Claim = {
   holder: string;
   issuer: string;
   topic: string;
   value: AttestationValue;
-}
+};

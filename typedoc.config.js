@@ -19,7 +19,7 @@ module.exports = {
     ["@cennznet/api", "(.*packages\/api\/.*|node_modules\/@cennznet\/api\/.*)", "packages/api/README.md"],
     ["@cennznet/types", "(.*packages\/types\/.*|node_modules\/@cennznet\/types\/.*)", "packages/types/README.md"],
     ["@cennznet/util", "(.*packages\/util\/.*|node_modules\/@cennznet\/util\/.*)", "packages/util/README.md"],
-    ["@cennznet/crml-cennzx-spot", "(.*packages\/crml-attestaation\/.*|node_modules\/@cennznet\/crml-attestaation\/.*)", "packages/crml-attestation/README.md"],
+    ["@cennznet/crml-attestation", "(.*packages\/crml-attestation\/.*|node_modules\/@cennznet\/crml-attestation\/.*)"],
     ["@cennznet/crml-cennzx-spot", "(.*packages\/crml-cennzx-spot\/.*|node_modules\/@cennznet\/crml-cennzx-spot\/.*)", "packages/crml-cennzx-spot/README.md"],
   ],
   "excludePrivate": true,
