@@ -19,7 +19,7 @@ import { AttestationValue, TypeRegistry } from '@cennznet/types';
 import testKeyring from '@polkadot/keyring/testing';
 import { KeyringPair } from '@polkadot/keyring/types';
 
-import initApiRx from '../../../jest/initApiRx';
+import initApiRx from '../../../../../jest/initApiRx';
 
 const issuerUri = '//Alice';
 const issuer2Uri = '//Bob';
@@ -61,7 +61,9 @@ describe('AttestationRx APIs', () => {
           first()
         )
         .subscribe(({ events, status }) => {
-          for (const { event: { method, data } } of events) {
+          for (const {
+            event: { method, data },
+          } of events) {
             if (method === 'ClaimSet') {
               expect(data[0].toString()).toBe(holder.address);
               // Expect issuers to match
@@ -99,7 +101,9 @@ describe('AttestationRx APIs', () => {
           })
         )
         .subscribe(({ events, status }) => {
-          for (const { event: { method, data } } of events) {
+          for (const {
+            event: { method, data },
+          } of events) {
             if (method === 'ClaimSet') {
               expect(data[0].toString()).toBe(holder.address);
               // Expect issuers to match
@@ -124,7 +128,9 @@ describe('AttestationRx APIs', () => {
           })
         )
         .subscribe(({ events, status }) => {
-          for (const { event: { method, data } } of events) {
+          for (const {
+            event: { method, data },
+          } of events) {
             if (method === 'ClaimSet') {
               expect(data[0].toString()).toBe(holder.address);
               // Expect issuers to match
@@ -149,7 +155,9 @@ describe('AttestationRx APIs', () => {
           })
         )
         .subscribe(({ events, status }) => {
-          for (const { event: { method, data } } of events) {
+          for (const {
+            event: { method, data },
+          } of events) {
             if (method === 'ClaimSet') {
               expect(data[0].toString()).toBe(holder.address);
               // Expect issuers to match
@@ -174,7 +182,9 @@ describe('AttestationRx APIs', () => {
           })
         )
         .subscribe(({ events, status }) => {
-          for (const { event: { method, data } } of events) {
+          for (const {
+            event: { method, data },
+          } of events) {
             if (method === 'ClaimSet') {
               expect(data[0].toString()).toBe(holder.address);
               // Expect issuers to match
@@ -193,7 +203,7 @@ describe('AttestationRx APIs', () => {
     it('should get a claim with a specific issuer and holder', done => {
       api.derive.attestation
         .getClaims(holder.address, [issuer.address, issuer2.address], [topic, topic2])
-        .subscribe((claims) => {
+        .subscribe(claims => {
           expect(claims[topic][issuer.address].toHex()).toEqual(attestationValue.toHex());
           expect(claims[topic][issuer.address].toU8a()).toEqual(attestationValue.toU8a());
 
@@ -223,7 +233,9 @@ describe('AttestationRx APIs', () => {
           })
         )
         .subscribe(({ events, status }) => {
-          for (const { event: { method, data } } of events) {
+          for (const {
+            event: { method, data },
+          } of events) {
             if (method === 'ClaimRemoved') {
               expect(data[0].toString()).toBe(holder.address);
               // Expect issuers to match

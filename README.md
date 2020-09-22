@@ -18,4 +18,3 @@ These libraries provide some syntactic sugar and extensions to the core `@cennzn
 | Name                                                        | Description                                                          |
 | ----------------------------------------------------------- | -------------------------------------------------------------------- |
 | [@cennznet/crml-cennzx-spot](packages/crml-cennzx-spot)     | An sdk providing additional features for CENNZX spot runtime module   |
-| [@cennznet/crml-attestation](packages/crml-attestation)     | An sdk providing additional features for CENNZnet's attestation module |

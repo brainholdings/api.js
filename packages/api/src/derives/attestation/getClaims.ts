@@ -16,7 +16,7 @@ import { combineLatest, Observable } from 'rxjs';
 
 import { ApiInterfaceRx } from '@cennznet/api/types';
 
-import { Claim } from '../types';
+import { Claim } from './types';
 import { getClaim } from './getClaim';
 
 /**

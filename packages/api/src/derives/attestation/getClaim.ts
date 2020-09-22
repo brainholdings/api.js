@@ -19,7 +19,7 @@ import { ApiInterfaceRx } from '@cennznet/api/types';
 import { AttestationValue } from '@cennznet/types';
 import { drr } from '@polkadot/rpc-core/rxjs';
 
-import { Claim } from '../types';
+import { Claim } from './types';
 
 /**
  * Retrieve a single claim made about a holder by the given issuer on a given topic.

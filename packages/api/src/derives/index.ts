@@ -13,11 +13,11 @@
 // limitations under the License.
 
 import { ApiTypes } from '@cennznet/api/types';
-import * as attestation from '@cennznet/crml-attestation/derives';
 import * as cennzxSpot from '@cennznet/crml-cennzx-spot/derives';
 import { AnyFunction } from '@cennznet/types/types';
 import { ApiInterfaceRx, MethodResult } from '@polkadot/api/types';
 import { Observable } from 'rxjs';
+import * as attestation from './attestation';
 import * as fees from './fees';
 import * as session from './session';
 import * as staking from './staking';
